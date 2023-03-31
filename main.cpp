@@ -27,7 +27,7 @@
 
 using json = nlohmann::json;
 // Replace these variables with your own GitHub API access token, repo owner, and repo name
-const std::string GITHUB_TOKEN = "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";
+const std::string GITHUB_TOKEN = "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";
 const std::string REPO_OWNER = "osama256";
 const std::string REPO_NAME = "howilive";
 const std::string substring = "\"name\": \"help wanted\"";
@@ -251,10 +251,13 @@ while(!sent) {
 // const std::string REPO_NAME = "howilive";
 // const std::string substring = "\"name\": \"help wanted\"";
 //get labels and send
-    json labels = getIssueLabels(REPO_OWNER, REPO_NAME, 1, "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");
+    json labels = getIssueLabels(REPO_OWNER, REPO_NAME, 1, "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");
     if (!labels.empty()) {
+            // std::cout << labels << std::endl;
+
         for (const auto& label : labels) {
-            // std::cout << label["name"] << std::endl;
+            // std::cout << label << std::endl;
+            // return 0;
             if(label["name"] == "help wanted") {
                 sendCommentOnIssue("1", "Hello How are you, Microsoft");
                 return 0;
