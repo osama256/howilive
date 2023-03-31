@@ -27,7 +27,7 @@
 
 using json = nlohmann::json;
 // Replace these variables with your own GitHub API access token, repo owner, and repo name
-const std::string GITHUB_TOKEN = "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";
+const std::string GITHUB_TOKEN = "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";
 const std::string REPO_OWNER = "osama256";
 const std::string REPO_NAME = "howilive";
 const std::string substring = "\"name\": \"help wanted\"";
