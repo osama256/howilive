@@ -186,12 +186,12 @@ int main() {
 bool sent = false;
 while(!sent) {
 if(getIssue("1")){
-    sendCommentOnIssue("1", "Hello How are you 1");
+    sendCommentOnIssue("1", "Hello How are you 1, Microsoft");
     std::cout<< "should send now";
 
     sent=true;
 }
-std::this_thread::sleep_for(std::chrono::milliseconds(50));
+std::this_thread::sleep_for(std::chrono::milliseconds(150));
 
 }
 // dealwithjson("fdsfsdfsd");
