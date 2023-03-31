@@ -27,13 +27,16 @@
 
 using json = nlohmann::json;
 // Replace these variables with your own GitHub API access token, repo owner, and repo name
-const std::string GITHUB_TOKEN = "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";
+const std::string GITHUB_TOKEN = "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";
 const std::string REPO_OWNER = "osama256";
 const std::string REPO_NAME = "howilive";
 const std::string substring = "\"name\": \"help wanted\"";
 
 
-
+// size_t curl_write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+//     ((std::string*)userp)->append((char*)contents, size * nmemb);
+//     return size * nmemb;
+// }
 
 
 size_t getAnswerFunction(void* ptr, size_t size, size_t nmemb, std::string* data) {
@@ -91,6 +94,47 @@ void dealwithjson(std::string body) {
         // std::cout << "body : " + body;
 }
 
+//Function to get a Github issue labels
+
+json getIssueLabels(const std::string& owner, const std::string& repo, const int issueNumber, const std::string& authToken = "") {
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+
+    curl = curl_easy_init();
+    if(curl) {
+        std::string apiUrl = "https://api.github.com/repos/" + owner + "/" + repo + "/issues/" + std::to_string(issueNumber) + "/labels";
+        curl_easy_setopt(curl, CURLOPT_URL, apiUrl.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getAnswerFunction);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
+        struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "User-Agent: C++ Application");
+
+        if (!authToken.empty()) {
+            std::string authHeader = "Authorization: token " + authToken;
+            headers = curl_slist_append(headers, authHeader.c_str());
+        }
+
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        res = curl_easy_perform(curl);
+
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
+
+        if(res == CURLE_OK) {
+            return json::parse(readBuffer);
+        }
+    }
+
+    return json();
+}
+
+
+
+
+
 // Function to get a GitHub issue using the GitHub API
 bool getIssue(std::string issueNumber) {
   CURL *curl;
@@ -126,16 +170,19 @@ bool getIssue(std::string issueNumber) {
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getAnswerFunction);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 10000);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
 
     res = curl_easy_perform(curl);
     if (res == CURLE_OK) {
+        std::cout<<"gonna check if help wanted exist";
     // check if text response_string "name": "help wanted",
         if (response_string.find(substring) != std::string::npos) {
                 std::cout << "Help wanted found!!!!";
                 return true;
 
-            }
+        }
+        std::cout<<"No help wanted";
+
         return false;
             // else{
             //     std::cout << "Help wanted not found!!!!";
@@ -178,22 +225,50 @@ bool getIssue(std::string issueNumber) {
 
 
 int main() {
+
+    std::cout<< "Started";
 //   // Replace these variables with the issue number and comment you want to send
 //   std::string issueNumber = "1";
 //   std::string comment = "Hello, this is a test comment.";
 
 //   sendCommentOnIssue(issueNumber, comment);
+
+
 bool sent = false;
 while(!sent) {
-if(getIssue("1")){
-    sendCommentOnIssue("1", "Hello How are you 1, Microsoft");
-    std::cout<< "should send now";
+// if(getIssue("1")){
+//     sendCommentOnIssue("1", "Hello How are you, Local");
+//     std::cout<< "should send now";
 
-    sent=true;
-}
-std::this_thread::sleep_for(std::chrono::milliseconds(150));
+//     sent=true;
+// }
+// std::this_thread::sleep_for(std::chrono::milliseconds(100));
+// // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
+// const std::string GITHUB_TOKEN = "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";
+// const std::string REPO_OWNER = "osama256";
+// const std::string REPO_NAME = "howilive";
+// const std::string substring = "\"name\": \"help wanted\"";
+//get labels and send
+    json labels = getIssueLabels(REPO_OWNER, REPO_NAME, 1, "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");
+    if (!labels.empty()) {
+        for (const auto& label : labels) {
+            // std::cout << label["name"] << std::endl;
+            if(label["name"] == "help wanted") {
+                sendCommentOnIssue("1", "Hello How are you, Microsoft");
+                return 0;
+            }
+        }
+    }
+
+ std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 }
+
+
+
+
 // dealwithjson("fdsfsdfsd");
 
 
