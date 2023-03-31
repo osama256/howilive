@@ -251,7 +251,7 @@ while(!sent) {
 // const std::string REPO_NAME = "howilive";
 // const std::string substring = "\"name\": \"help wanted\"";
 //get labels and send
-    json labels = getIssueLabels(REPO_OWNER, REPO_NAME, 1, "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");
+    json labels = getIssueLabels(REPO_OWNER, REPO_NAME, 1, GITHUB_TOKEN);
     if (!labels.empty()) {
             // std::cout << labels << std::endl;
 
