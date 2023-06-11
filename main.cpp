@@ -158,10 +158,10 @@ bool getIssue(std::string issueNumber) {
     // if(res != CURLE_OK)
     //   std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         // std::cout << res.labels;
-        // std::string jsonStrr = "Osama Mostafa";
+        // std::string jsonStrr = "Osama";
         // const std::string jsonStr = R"({
         //     "name": "John",
-        //     "age": 30,
+        //     "age": 20,
         //     "city": "New York",
         //     "hobbies": ["reading", "traveling"]
         // })";
